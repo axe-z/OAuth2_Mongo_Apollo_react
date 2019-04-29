@@ -8,7 +8,7 @@ import monReducer from "./reducer";
 
 import App from "./pages/App";
 import Splash from "./pages/Splash";
-
+import ProtectionDeRoute from "./ProtectionDeRoute";
 import "mapbox-gl/dist/mapbox-gl.css";
 import * as serviceWorker from "./serviceWorker";
 
@@ -16,11 +16,12 @@ const Root = () => {
   const initialState = useContext(MonContext);
   const [state, dispatch] = useReducer(monReducer, initialState);
 
+  console.log(state);
   return (
     <Router>
       <MonContext.Provider value={{ state, dispatch }}>
         <Switch>
-          <Route exact path="/" component={App} />
+          <ProtectionDeRoute exact path="/" component={App} />
           <Route path="/login" component={Splash} />
         </Switch>
       </MonContext.Provider>
