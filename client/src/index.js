@@ -1,6 +1,10 @@
-import React from "react";
+// eslint-disable-next-line
+import React, { useState, useContext, useReducer } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+//hooks
+import MonContext from "./context";
+import monReducer from "./reducer";
 
 import App from "./pages/App";
 import Splash from "./pages/Splash";
@@ -9,12 +13,17 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import * as serviceWorker from "./serviceWorker";
 
 const Root = () => {
+  const initialState = useContext(MonContext);
+  const [state, dispatch] = useReducer(monReducer, initialState);
+
   return (
     <Router>
-      <Switch>
-        <Route exact path="/" component={App} />
-        <Route path="/login" component={Splash} />
-      </Switch>
+      <MonContext.Provider value={{ state, dispatch }}>
+        <Switch>
+          <Route exact path="/" component={App} />
+          <Route path="/login" component={Splash} />
+        </Switch>
+      </MonContext.Provider>
     </Router>
   );
 };

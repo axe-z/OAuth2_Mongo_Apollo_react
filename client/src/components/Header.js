@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 // import AppBar from "@material-ui/core/AppBar";
 // import Toolbar from "@material-ui/core/Toolbar";
 // import Map from "@material-ui/icons/Map";
-// import Typography from "@material-ui/core/Typography";
+import Typography from "@material-ui/core/Typography";
 
 const Header = ({ classes }) => {
   return <div>Header</div>;

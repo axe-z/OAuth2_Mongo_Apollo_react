@@ -1,7 +1,9 @@
-import React from "react";
+// eslint-disable-next-line
+import React, { useState, useContext } from "react";
 import { GraphQLClient } from "graphql-request";
 import { withStyles } from "@material-ui/core/styles";
 import { GoogleLogin } from "react-google-login";
+import MonContext from "../../context";
 // import Typography from "@material-ui/core/Typography";
 
 const ME_QUERY = `
@@ -15,6 +17,9 @@ const ME_QUERY = `
 }`;
 
 const Login = ({ classes }) => {
+  // const [moi, setMoi] = useState({});
+  const { state, dispatch } = useContext(MonContext);
+
   const onSuccess = async googleUser => {
     // on va recevoir un google user
     // console.log(googleUser);
@@ -25,15 +30,29 @@ const Login = ({ classes }) => {
       headers: { authorization: idToken }
     });
     console.log(client);
-    const data = await client.request(ME_QUERY);
-    console.log({ data });
+    const { me } = await client.request(ME_QUERY); //data.me
+    // console.log(me);
+    dispatch({ type: "LOGIN_USER", payload: me });
+    // setMoi(me);
   };
+  // const { name, email, picture } = moi;
+  console.log(state);
   return (
-    <GoogleLogin
-      clientId="755010499514-bc21hkimmlobfi4t33laso64r9knkljt.apps.googleusercontent.com"
-      onSuccess={onSuccess}
-      isSignedIn={true}
-    />
+    <div>
+      <GoogleLogin
+        clientId="755010499514-bc21hkimmlobfi4t33laso64r9knkljt.apps.googleusercontent.com"
+        onSuccess={onSuccess}
+        isSignedIn={true}
+      />
+
+      {/* {moi && (
+        <>
+          <p>{name}</p>
+          <p>{email}</p>
+          <img src={picture} alt={name} style={{ borderRadius: "100%" }} />
+        </>
+      )} */}
+    </div>
   );
 };
 
