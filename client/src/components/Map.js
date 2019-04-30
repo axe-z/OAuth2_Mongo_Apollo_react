@@ -1,23 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import ReactMapGL, { NavigationControl } from "react-map-gl"; //NavigationControl donne les control de zoom
+import ReactMapGL, { NavigationControl, Marker } from "react-map-gl"; //NavigationControl donne les control de zoom
+import PinIcon from "./PinIcon";
+
 // import Button from "@material-ui/core/Button";
 // import Typography from "@material-ui/core/Typography";
 // import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
 
 const INITIAL_VIEWPORT = {
-  latitude: 45.50884,
-  // latitude: 37.7577,
-
-  longitude: -73.58781,
-  // longitude: -122.4376,
-
+  // latitude: 45.50884,
+  latitude: 37.7577,
+  // longitude: -73.58781,
+  longitude: -122.4376,
   zoom: 13
 };
 
 const Map = ({ classes }) => {
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
+  const [userPosition, setUserPosition] = useState(null);
 
+  useEffect(() => {
+    // didmount
+    getPositionUser();
+  }, []);
+
+  const getPositionUser = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(position => {
+        //console.log(position);
+        const { latitude, longitude } = position.coords;
+        setViewport({ ...viewport, latitude, longitude });
+        //prend du temps
+        setUserPosition({ latitude, longitude });
+      });
+    }
+  };
+
+  const handleMapClick = e => {
+    const [longitude, latitude] = e.lngLat;
+    // console.log(e.lngLat[0]);
+    console.log(longitude, latitude);
+  };
+
+  // {/*https://github.com/uber/react-map-gl*/}
   return (
     <div className={classes.root}>
       <ReactMapGL
@@ -26,10 +51,22 @@ const Map = ({ classes }) => {
         height="calc(100vh - 64px)"
         mapStyle="mapbox://styles/mapbox/dark-v9"
         onViewportChange={viewport => setViewport(viewport)} //permet de deplacer
-        {...viewport}>
+        {...viewport}
+        onClick={handleMapClick}>
         <div className={classes.navigationControl}>
           <NavigationControl onViewportChange={viewport => setViewport(viewport)} />
         </div>
+        {/*pin pour location*/}
+        {userPosition && (
+          <Marker
+            latitude={userPosition.latitude}
+            longitude={userPosition.longitude}
+            offSetLeft={-19}
+            offSetTop={-37}>
+            {/* amener un icon */}
+            <PinIcon color={"rgb(167, 12, 12)"} size={44} onClick={e => console.log("test")} />
+          </Marker>
+        )}
       </ReactMapGL>
     </div>
   );

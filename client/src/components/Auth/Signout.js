@@ -33,11 +33,13 @@ const styles = {
     display: "flex"
   },
   buttonText: {
-    color: "green"
+    // color: "green"
+    color: "rgb(147, 12, 12)"
   },
   buttonIcon: {
     marginLeft: "5px",
-    color: "green"
+    // color: "green"
+    color: "rgb(167, 12, 12)"
   }
 };
 
