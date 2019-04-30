@@ -13,6 +13,12 @@ export default function monReducer(state, { type, payload }) {
         ...state,
         isAuth: payload //au lieu de action.payload
       };
+    case "SIGNOUT_USER":
+      return {
+        ...state,
+        currentUser: null,
+        isAuth: false
+      };
     default:
       return state;
   }

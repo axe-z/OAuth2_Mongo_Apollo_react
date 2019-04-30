@@ -71,7 +71,7 @@ const Login = ({ classes }) => {
           <img
             src={state.currentUser.picture}
             alt={state.currentUser.name}
-            style={{ borderRadius: "100%" }}
+            // style={{ borderRadius: "100%" }}
           />
         </>
       )}
@@ -86,7 +86,7 @@ const styles = {
     justifyContent: "center",
     flexDirection: "column",
     alignItems: "center",
-    transform: "translateY(-80px)"
+    transform: "translateY(-10vh)"
   }
 };
 

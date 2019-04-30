@@ -9,14 +9,14 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: amber[300],
-      main: amber[500],
-      dark: amber[700]
-    },
-    secondary: {
       light: grey[300],
       main: grey[500],
       dark: grey[700]
+    },
+    secondary: {
+      light: amber[300],
+      main: amber[500],
+      dark: amber[700]
     }
   },
   typography: {
