@@ -3,7 +3,8 @@ import { createContext } from "react";
 
 const MonContext = createContext({
   currentUser: null,
-  isAuth: false
+  isAuth: false,
+  draft: null
 });
 
 export default MonContext;

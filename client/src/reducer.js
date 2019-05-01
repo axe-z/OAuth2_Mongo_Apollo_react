@@ -19,6 +19,27 @@ export default function monReducer(state, { type, payload }) {
         currentUser: null,
         isAuth: false
       };
+    case "CREER_DRAFT":
+      return {
+        ...state,
+        draft: {
+          longitude: 0,
+          latitude: 0
+        }
+      };
+    case "UPDATE_DRAFT_LOCATION":
+      return {
+        ...state,
+        draft: {
+          longitude: payload.longitude,
+          latitude: payload.latitude
+        }
+      };
+    case "DELETE_DRAFT":
+      return {
+        ...state,
+        draft: null
+      };
     default:
       return state;
   }

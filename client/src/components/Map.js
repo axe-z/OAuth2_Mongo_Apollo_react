@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import ReactMapGL, { NavigationControl, Marker } from "react-map-gl"; //NavigationControl donne les control de zoom
 import PinIcon from "./PinIcon";
+import Blog from "./Blog";
+import MonContext from "../context";
 
 // import Button from "@material-ui/core/Button";
 // import Typography from "@material-ui/core/Typography";
@@ -16,6 +18,7 @@ const INITIAL_VIEWPORT = {
 };
 
 const Map = ({ classes }) => {
+  const { state, dispatch } = useContext(MonContext);
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [userPosition, setUserPosition] = useState(null);
 
@@ -38,8 +41,14 @@ const Map = ({ classes }) => {
 
   const handleMapClick = e => {
     const [longitude, latitude] = e.lngLat;
+    const leftButton = e.leftButton;
+    if (!leftButton) return;
+    if (!state.draft) {
+      dispatch({ type: "CREER_DRAFT" });
+    }
+    dispatch({ type: "UPDATE_DRAFT_LOCATION", payload: { longitude, latitude } });
     // console.log(e.lngLat[0]);
-    console.log(longitude, latitude);
+    // console.log(longitude, latitude);
   };
 
   // {/*https://github.com/uber/react-map-gl*/}
@@ -61,13 +70,28 @@ const Map = ({ classes }) => {
           <Marker
             latitude={userPosition.latitude}
             longitude={userPosition.longitude}
-            offSetLeft={-19}
-            offSetTop={-37}>
+            offsetLeft={-19}
+            offsetTop={-37}>
             {/* amener un icon */}
             <PinIcon color={"rgb(167, 12, 12)"} size={44} onClick={e => console.log("test")} />
           </Marker>
         )}
+
+        {/* pin draft ajoutee */}
+        {state.draft && (
+          <Marker
+            latitude={state.draft.latitude}
+            longitude={state.draft.longitude}
+            offsetLeft={-19}
+            offsetTop={-37}>
+            {/* amener un icon */}
+            <PinIcon color={"rgb(217, 12, 12)"} size={44} onClick={e => console.log("test")} />
+          </Marker>
+        )}
+
+        {/* blog pour Pin */}
       </ReactMapGL>
+      <Blog />
     </div>
   );
 };

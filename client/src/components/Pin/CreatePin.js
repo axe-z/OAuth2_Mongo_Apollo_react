@@ -1,15 +1,111 @@
-import React from "react";
+// import React from "react";
+// eslint-disable-next-line
+import React, { useState } from "react";
+import axios from "axios";
 import { withStyles } from "@material-ui/core/styles";
-// import TextField from "@material-ui/core/TextField";
-// import Typography from "@material-ui/core/Typography";
-// import Button from "@material-ui/core/Button";
-// import AddAPhotoIcon from "@material-ui/icons/AddAPhotoTwoTone";
-// import LandscapeIcon from "@material-ui/icons/LandscapeOutlined";
-// import ClearIcon from "@material-ui/icons/Clear";
-// import SaveIcon from "@material-ui/icons/SaveTwoTone";
+import { CustomContext } from "../../CustomContext";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import AddAPhotoIcon from "@material-ui/icons/AddAPhotoTwoTone";
+import LandscapeIcon from "@material-ui/icons/LandscapeOutlined";
+import ClearIcon from "@material-ui/icons/Clear";
+import SaveIcon from "@material-ui/icons/SaveTwoTone";
 
 const CreatePin = ({ classes }) => {
-  return <div>CreatePin</div>;
+  const { dispatch } = CustomContext();
+  const [titre, setTitre] = useState("");
+  const [image, setImage] = useState("");
+  const [description, setDescription] = useState("");
+
+  const handleDeleteDraft = () => {
+    setTitre("");
+    setImage("");
+    setDescription("");
+    dispatch({ type: "DELETE_DRAFT" });
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const url = await handleImageUpload(); //url recu de cloudinary
+    console.log({ titre, image, description, url });
+  };
+
+  const handleImageUpload = async () => {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "geoaxe");
+    data.append("cloud_name", "benoit-lafrance"); //cloud name du dashboard
+    const res = await axios.post(
+      "https://api.cloudinary.com/v1_1/benoit-lafrance/image/upload",
+      data
+    ); //API Base URL: et data en post
+
+    return res.data.url;
+  };
+
+  return (
+    <form className={classes.form}>
+      <Typography className={classes.alignCenter} component="h3" variant="h4" color="secondary">
+        <LandscapeIcon className={classes.iconLarge} /> Pinner une position
+      </Typography>
+      <div>
+        <TextField
+          name="titre"
+          label="titre"
+          placeholder="Inserer le titre du pin"
+          onChange={e => setTitre(e.currentTarget.value)}
+        />
+        <input
+          accept="image/*"
+          id="image"
+          type="file"
+          className={classes.input}
+          onChange={e => setImage(e.currentTarget.files[0])}
+        />
+        <label htmlFor="image">
+          <Button
+            className={classes.button}
+            component="span"
+            size="small"
+            style={{ color: image && "#f44336" }}>
+            <AddAPhotoIcon /> {image && "  ✔️"}
+          </Button>
+        </label>
+      </div>
+      <div className={classes.contentField}>
+        <TextField
+          name="description"
+          label="description"
+          multiline
+          rows="6"
+          margin="normal"
+          variant="outlined"
+          onChange={e => setDescription(e.currentTarget.value)}
+        />
+      </div>
+      <div>
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="primary"
+          onClick={handleDeleteDraft}>
+          <ClearIcon className={classes.leftIcon} />
+          Enlever
+        </Button>
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="secondary"
+          type="submit"
+          disabled={!titre.trim() || !image || !description.trim()}
+          onClick={handleSubmit}>
+          Envoyer
+          <SaveIcon className={classes.rightIcon} />
+        </Button>
+      </div>
+    </form>
+  );
 };
 
 const styles = theme => ({
@@ -30,7 +126,8 @@ const styles = theme => ({
   },
   alignCenter: {
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
+    fontSize: 20
   },
   iconLarge: {
     fontSize: 40,
